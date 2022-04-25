@@ -1,0 +1,45 @@
+go.property("dir", vmath.vector3())     
+
+function init(self)
+	self.speed = 200  
+	self.lifetime = 0                           
+end
+
+function update(self, dt)
+
+	local pos = go.get_position()                 
+	pos = pos + self.dir * self.speed * dt          
+	go.set_position(pos) 
+
+end
+
+function on_message(self, message_id, message, sender)
+
+	if message_id == hash("contact_point_response") then
+		go.delete()
+	end
+	
+	if message_id == hash("sdeath") then
+		msg.post("enemyspawner#slime", "bk")
+	go.delete()
+
+	end
+
+	if message_id == hash("kdeath") then
+		msg.post("enemyspawner#knight", "bk")
+		go.delete()
+
+	end
+
+	if message_id == hash("sddeath") then
+		msg.post("enemyspawner#shadowbat", "bk")
+		go.delete()
+
+	end
+
+	if message_id == hash("spdeath") then
+		msg.post("enemyspawner#spider", "bk")
+		go.delete()
+
+	end
+end

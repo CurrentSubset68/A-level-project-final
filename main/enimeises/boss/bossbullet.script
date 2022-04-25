@@ -1,0 +1,20 @@
+go.property("dir", vmath.vector3())    
+--local E = require "main.enimeises.boss.angle"  
+function init(self)
+	self.speed = 200
+end
+
+function update(self, dt)
+	local pos = go.get_position() 
+--	local angle = E.getangle()                
+	pos = pos + self.dir * self.speed * dt     
+
+	go.set_position(pos) 
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then
+		go.delete()
+	end
+end
+

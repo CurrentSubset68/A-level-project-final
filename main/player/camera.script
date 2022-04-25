@@ -1,0 +1,22 @@
+-- copied from the example script for camera on the defold website
+function init(self)
+	msg.post("#camera", "acquire_camera_focus")
+	pprint("camera aquires")
+end
+
+function on_message(self, message_id, message, sender)
+	pprint("on message works")
+	if message_id == hash("follow") then
+		pprint("camera follows")
+		go.set_parent(".", sender)
+		go.set_position(vmath.vector3(-360, -360, 0))
+	elseif message_id == hash("unfollow") then
+		pprint("camera unfollows")
+		go.set_parent("camera", nil, true)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	--needed otherwise the camera breaks
+	-- the worst part is that there is ALREADY an on_message function.
+end

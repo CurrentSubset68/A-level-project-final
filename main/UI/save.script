@@ -1,0 +1,66 @@
+--defsave plugin used to make save path softcoding way easier. https://github.com/subsoap/defsave
+
+local defsave = require "defsave.defsave"
+local scores = require "main.saving.scores"
+local D = require "main.player.score"
+
+function init(self)
+	msg.url(urlstring)
+	defsave.set_appname("test") -- folder
+	defsave.load("scores")  -- loads the file
+	defsave.save("scores")  -- save?
+	pprint("score " .. defsave.get("scores", "score"))
+	pprint("highscore " .. defsave.get("scores", "highscore"))
+	pprint("score.lua " .. D.getscore())
+
+end
+
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("playerdeath") then -- message passing fails
+		pprint("player death recieved")
+		
+		pprint("score " .. defsave.get("scores", "score"))
+		pprint("highscore " .. defsave.get("scores", "highscore"))
+		pprint("score.lua  " .. D.getscore())
+		
+		defsave.set("scores", "score", D.getscore())  -- saved score = current score
+		if defsave.get("scores", "highscore") == nil then -- if current highscore is nil, never played before, set to zero
+			defsave.set("scores", "highscore", 0)         --
+
+			pprint("score " .. defsave.get("scores", "score"))
+			pprint("highscore " .. defsave.get("scores", "highscore"))
+			pprint("score.lua  " .. D.getscore())
+			
+		end
+		
+		defsave.save("scores") -- scores are saved
+
+		scores.score = D.getscore()  -- score in lua module becomes current score
+		scores.highscore = defsave.get("scores", "highscore") -- highscore in lua module becomes saved highscore
+		if scores.score > defsave.get("scores", "highscore") then -- if saved score is greater than highscore then replace highscore with the saved score
+			pprint("new highscore")
+			defsave.set("scores", "highscore", scores.score)        --
+			scores.highscore = defsave.get("scores", "highscore") -- highscore in lua module becomes saved highscore
+
+			
+			pprint("score " .. defsave.get("scores", "score"))
+			pprint("highscore " .. defsave.get("scores", "highscore"))
+			pprint("score.lua  " .. D.getscore())
+			
+			
+		end
+		defsave.save("scores") -- save changes
+		
+		
+		
+		pprint("lua module score " .. scores.score)
+		pprint("lua module highscore " .. scores.highscore)
+		pprint("score " .. defsave.get("scores", "score"))
+		pprint("highscore " .. defsave.get("scores", "highscore"))
+		pprint("score.lua  " .. D.getscore())
+		
+	end
+
+end

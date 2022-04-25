@@ -1,0 +1,8 @@
+local scores = require "main.saving.scores"
+
+function update(self, dt)
+	local score_location = gui.get_node("scoreboard")
+	local data = "score is " .. scores.score .. " highscore is " .. scores.highscore   --displays your current score and your highest score, at the end of the game.
+
+	gui.set_text(score_location, data)
+end

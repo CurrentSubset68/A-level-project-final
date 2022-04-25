@@ -1,0 +1,14 @@
+local D = require "main.player.score"
+
+function init(self)
+	local score = D.getscore()
+	
+end
+
+function update(self, dt)
+	local score = "score is " .. D.getscore()
+	local score_location = gui.get_node("score")			--displays current score, taken from the score lua module
+	
+	gui.set_text(score_location, score)
+
+end

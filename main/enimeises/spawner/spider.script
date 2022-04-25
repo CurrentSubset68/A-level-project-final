@@ -1,0 +1,102 @@
+local C = require "main.player.health"
+local B = require "main.enimeises.dmg"
+local D = require "main.player.score"
+function init(self)
+	math.randomseed(100000000000000 * (socket.gettime() % 1))
+	self.health = 2
+	self.moving = false
+	self.input = vmath.vector3()
+	self.dir = vmath.vector3(0, 1, 0)
+	self.speed = 150
+	self.t = 120
+	self.input.x = 0
+	self.input.y = 0
+	self.count = 0
+end
+
+function update(self, dt)
+	local mov = math.random(1,4)
+	if self.health <= 0 then
+		go.delete()
+		D.spider()
+	end
+
+	for i=1, mov do
+		if mov == 2 then
+			self.input.y = 1
+		elseif mov == 4 then
+			self.input.y = -1
+		elseif mov == 3 then
+			self.input.x = -1
+		elseif mov == 1 then
+			self.input.x = 1
+		end
+	end
+	
+	local pos = go.get_position()
+	pos1 = pos + self.dir * self.speed * dt * self.input.x
+	go.set_position(pos1)
+	pos2 = pos + self.dir * self.speed * dt * self.input.y
+	go.set_position(pos2)
+
+end
+
+function on_message(self, message_id, message, sender)
+	local dmg1 = B.getdamage()
+
+	if message_id == hash("slowed") and message.other_group == hash("bullet") then
+		self.speed = 100
+	end
+	
+	if message_id == hash("contact_point_response") and message.other_group == hash("player") then
+		C.spiderhit()
+		msg.post("player#player", "dot")
+	end
+
+	if message_id == hash("contact_point_response") then
+
+		go.set_position(go.get_position() + (message.normal * message.distance))
+		if vmath.length(self.input) > 0 then
+
+			self.moving = true
+			self.dir = vmath.normalize(self.input)
+		end
+	end
+
+
+	if message_id == hash("dot") then
+
+		local dotcount = 5
+		local del = nil
+		del = timer.delay(10, false, function(self)
+			for i = 0, dotcount do
+				i = i + 1
+				self.health = self.health - 1
+				del = nil
+			end
+			del = nil
+		end)
+		
+		
+
+
+			
+
+
+	end
+
+
+	if message_id == hash("contact_point_response") and message.other_group == hash("bullet") then
+		msg.post(message.other_id, "spdeath")
+
+		--tiemr = 1
+		pprint("bullet collision")
+
+
+		pprint("health decreased")
+		self.health = self.health - dmg1
+
+		pprint("dmg is ", dmg1)
+		pprint("health is ",self.health)
+	end
+end

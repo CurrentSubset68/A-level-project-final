@@ -1,0 +1,38 @@
+--randomizes seed, and then spawns in items
+function init(self)
+	math.randomseed(100000000000000 * (socket.gettime() % 1))
+	local seed = math.random(1,8)
+	local pos = go.get_position("itemspawner")
+	if seed == 1 then
+		factory.create("#damagebuff", pos)
+		pprint("spawned damage buff")
+	end
+	if seed == 2 then
+		factory.create("#firestaff", pos)
+		pprint("spawned fire staff")
+	end
+	if seed == 3 then
+		factory.create("#shoe", pos)
+		pprint("spawned shoe")
+	end
+	if seed == 4 then
+		factory.create("#powerstone", pos)
+		pprint("spawned power stone")
+	end
+	if seed == 5 then
+		factory.create("#healthamulet", pos)
+		pprint("spawned health amulet")
+	end
+	if seed == 6 then
+		factory.create("#healthpotion", pos)
+		pprint("spawned health potion")
+	end
+	if seed == 7 then
+		factory.create("#healthup", pos)
+		pprint("spawned health up")
+	end
+	if seed == 8 then
+		factory.create("#icestaff", pos)
+		pprint("spawned ice staff")
+	end
+end

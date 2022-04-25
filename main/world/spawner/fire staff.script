@@ -1,0 +1,15 @@
+local B = require "main.enimeises.dmg"
+local D = require "main.player.score"
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") and message.other_group == hash("player") then
+		go.delete()
+		B.firestaff()
+		msg.post("enemyspawner#knight", "dot")      -- sends required messaages to the enemy scrpts and also buffs damage updates score
+		msg.post("enemyspawner#shadowbat", "dot")
+		msg.post("enemyspawner#slime", "dot")
+		msg.post("enemyspawner#spider", "dot")
+		D.firestaff()
+	end
+		
+end

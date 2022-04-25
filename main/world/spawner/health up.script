@@ -1,0 +1,10 @@
+local C = require "main.player.health"
+local D = require "main.player.score"
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") and message.other_group == hash("player") then
+		go.delete()
+		C.buff()
+		D.healthup()
+	end
+end

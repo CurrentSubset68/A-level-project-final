@@ -1,0 +1,31 @@
+function init(self)
+	math.randomseed(100000000000000 * (socket.gettime() % 1))
+	local seed = math.random(1,5)
+	local pos = go.get_position("enemyspawner1")
+	if seed == 1 then
+		
+		factory.create("#knight", pos)
+		pprint("spawned  knight")
+	end
+	if seed == 2 then
+
+		factory.create("#barrel", pos)
+		pprint("spawned barrel")
+	end
+	if seed == 3 then
+
+		factory.create("#slime", pos)
+		pprint("spawned slime")
+	end
+	if seed == 4 then
+
+		factory.create("#spider", pos)
+		pprint("spawned spider")
+	end
+	if seed == 5 then
+
+		factory.create("#shadowbat", pos)
+		pprint("spawned health amulet")
+	end
+	
+end

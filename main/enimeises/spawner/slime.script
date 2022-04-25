@@ -1,0 +1,120 @@
+local B = require "main.enimeises.dmg"
+local C = require "main.player.health"
+local D = require "main.player.score"
+function init(self)
+	self.input = vmath.vector3()
+	self.dir = vmath.vector3(0, 1, 0)
+	self.speed = 100
+	self.health = 2
+	self.moving = false
+	self.firing = false
+	
+self.t = 10
+	self.input.x = 0
+	self.input.y = 0
+	self.count = 0
+	--self.timer = 1
+
+	pprint(self.health)
+
+	math.randomseed(100000000000000 * (socket.gettime() % 1))
+	
+	
+end
+
+function update(self, dt)
+
+
+	if self.health <= 0 then
+		go.delete()
+		D.slime()
+		
+	end
+	
+		local seed = math.random(1,4)
+		local mov = math.random(1,4)
+		local pos = go.get_position()
+		local xpos = math.random(1 * 4)
+		local ypos = math.random(1 * 4)
+		local xposb = math.random(1 * 4)
+		local yposb = math.random(1 * 4)
+		
+		for i=1, mov do
+				if mov == 2 then
+					self.input.y = 1
+				elseif mov == 4 then
+					self.input.y = -1
+				elseif mov == 3 then
+				self.input.x = -1
+				elseif mov == 1 then
+					self.input.x = 1
+				end
+		end
+				local pos = go.get_position()
+				pos1 = pos + self.dir * self.speed * dt * self.input.x
+				go.set_position(pos1)
+				pos2 = pos + self.dir * self.speed * dt * self.input.y
+				go.set_position(pos2)
+
+					--add a call back on the end to call either a new function or update/on_message depending on which works.
+			end
+	
+
+
+			function on_message(self, message_id, message, sender)
+			
+
+				if message_id == hash("contact_point_response") and message.other_group == hash("player") then
+					C.slimehit()
+				end
+
+				if message_id == hash("slowed") and message.other_group == hash("bullet") then
+					self.speed = 50
+				end
+				
+				if message_id == hash("contact_point_response") then
+					
+					go.set_position(go.get_position() + (message.normal * message.distance))
+					if vmath.length(self.input) > 0 then
+						
+						self.moving = true
+						self.dir = vmath.normalize(self.input)
+					end
+				end
+				local dmg1 = B.getdamage()
+				if message_id == hash("dmg") then
+
+					B.buff()
+					pprint(B.getdamage())
+
+				end
+
+				if message_id == hash("dot") then
+
+					local dotcount = 5
+					for i = 0, dotcount do
+						i = i + 1
+						local del = nil
+
+						del = timer.delay(10, false, function()
+
+							self.health = self.health - 1
+
+							del = nil
+
+						end)
+						del = nil
+					end
+				end
+				
+
+				if message_id == hash("contact_point_response") and message.other_group == hash("bullet") then
+					msg.post(message.other_id, "sdeath")
+						pprint("bullet collision")
+							pprint("health decreased")
+							self.health = self.health - dmg1
+
+						pprint("dmg is ", dmg1)
+						pprint("health is ",self.health)
+					end
+				end

@@ -1,0 +1,32 @@
+local B = require "main.enimeises.dmg"
+local C = require "main.player.health"
+local D = require "main.player.score"
+--local E = require "main.enimeises.boss.angle"
+function init(self)
+	self.health = 50
+	self.speed = 75
+	math.randomseed(100000000000000 * (socket.gettime() % 1))
+	self.input = vmath.vector3()
+	self.dir = vmath.vector3(0, 1, 0)
+	self.input.x = 0
+	self.input.y = 0
+	self.dir = vmath.vector3(0, 1, 0)
+	
+end
+
+function final(self)
+end
+
+function update(self, dt)
+	if self.health <= 0 then
+		go.delete()
+		D.bigslime()
+	end
+	--E.randomangle()
+	local angle = math.random(1,360)
+	local rot = vmath.quat_rotation_z(angle)
+	local pos = go.get_position()
+	local props = {dir = self.dir}
+	--factory.create("#bossfactory", nil, rot, props)
+	
+end

@@ -1,0 +1,29 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	msg.post("#game_proxy", "load") --loads game
+	self.current_collection = "#game_proxy"
+	msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("proxy_loaded") and sender == msg.url("main:/proxies#score_proxy") then   -- loads scoreboard proxy and initialises saving script
+		print("scoreboard loaded")
+		msg.post("scoreboard:/save#save", "playerdeath")
+	end
+	if message_id == hash("proxy_loaded") then
+	msg.post(sender, "enable")
+elseif message_id == hash("game") then  --loads game
+	msg.post(self.current_collection, "unload")
+	msg.post("#game_proxy", "load")
+	self.current_collection = "#game_proxy"
+elseif message_id == hash("playerdeath") then  --loads scoreboard
+	msg.post(self.current_collection, "unload")
+	msg.post("#score_proxy", "load")
+	self.current_collection = "#score_proxy"
+end
+
+end
